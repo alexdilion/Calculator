@@ -1,3 +1,10 @@
+const OPERATIONS = {
+  add,
+  subtract,
+  multiply,
+  divide
+}
+
 function add(x, y) {
   return x + y;
 }
@@ -17,4 +24,8 @@ function divide(x, y) {
   }
 
   return x / y;
+}
+
+function operate(x, y, operation) {
+  return OPERATIONS[operation](x, y)
 }
