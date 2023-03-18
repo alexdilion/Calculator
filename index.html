@@ -1,14 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <script src="./script.js"></script>
-    <title>Document</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./style.css" />
+        <script src="./script.js"></script>
+        <title>Document</title>
+    </head>
 
-  <body>
-    <h1>Hello World!</h1>
-  </body>
+    <body>
+        <header>
+            <h1>Calculator</h1>
+        </header>
+        <div class="calculator-wrapper">
+            <div class="display-wrapper">
+				<span class="display">12 × 3 = 23</span>
+			</div>
+            <div class="buttons-wrapper">
+                <!-- Digits -->
+                <button data-number="1">1</button>
+                <button data-number="2">2</button>
+                <button data-number="3">3</button>
+                <button data-number="4">4</button>
+                <button data-number="5">5</button>
+                <button data-number="6">6</button>
+                <button data-number="7">7</button>
+                <button data-number="8">8</button>
+                <button data-number="9">9</button>
+                <button data-number="10">0</button>
+
+                <!-- Operators -->
+                <button data-function="add">+</button>
+                <button data-function="subtract">-</button>
+                <button data-function="multiply">×</button>
+                <button data-function="divide">÷</button>
+
+                <!-- Calculator functions -->
+                <button data-function="operate">operate</button>
+                <button data-function="clear">clear</button>
+            </div>
+        </div>
+        <footer>
+            <a href="https://github.com/alexdilion/calculator">
+                <img
+                    src="./images/github-mark.png"
+                    alt="GitHub logo"
+                    height="30px" />
+                Alex Dilion &copy;
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+            </a>
+        </footer>
+    </body>
 </html>
