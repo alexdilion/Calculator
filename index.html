@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./style.css" />
         <script src="./script.js" defer></script>
-        <title>Document</title>
+        <title>Calculator</title>
     </head>
 
     <body>
@@ -14,31 +14,31 @@
         </header>
         <div class="calculator-wrapper">
             <div class="display">
-                <div id="equation" class="display-text">12 × 3 =</div>
-                <div id="result" class="display-text">23</div>
+                <div id="equation" class="display-text"></div>
+                <div id="result" class="display-text"></div>
             </div>
             <div class="buttons">
                 <!-- Digits -->
-                <button class="number" data-number="1">1</button>
-                <button class="number" data-number="2">2</button>
-                <button class="number" data-number="3">3</button>
-                <button class="number" data-number="4">4</button>
-                <button class="number" data-number="5">5</button>
-                <button class="number" data-number="6">6</button>
-                <button class="number" data-number="7">7</button>
-                <button class="number" data-number="8">8</button>
-                <button class="number" data-number="9">9</button>
-                <button class="number" data-number="0">0</button>
+                <button class="number" data-value="1">1</button>
+                <button class="number" data-value="2">2</button>
+                <button class="number" data-value="3">3</button>
+                <button class="number" data-value="4">4</button>
+                <button class="number" data-value="5">5</button>
+                <button class="number" data-value="6">6</button>
+                <button class="number" data-value="7">7</button>
+                <button class="number" data-value="8">8</button>
+                <button class="number" data-value="9">9</button>
+                <button class="number" data-value="0">0</button>
 
                 <!-- Operators -->
-                <button class="operator" id="add" data-function="add">+</button>
-                <button class="operator" id="subtract" data-function="subtract">-</button>
-                <button class="operator" id="multiply" data-function="multiply">×</button>
-                <button class="operator" id="divide" data-function="divide">÷</button>
+                <button class="operator" data-value="add">+</button>
+                <button class="operator" data-value="subtract">-</button>
+                <button class="operator" data-value="multiply">×</button>
+                <button class="operator" data-value="divide">÷</button>
 
                 <!-- Calculator functions -->
-                <button class="function" id="operate" data-function="operate">=</button>
-                <button class="function" id="clear" data-function="clear">clear</button>
+                <button class="function" id="operate" data-value="operate">=</button>
+                <button class="function" id="clear" data-value="clear">clear</button>
             </div>
         </div>
         <footer>
