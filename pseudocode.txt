@@ -32,6 +32,8 @@ When a number button is pressed:
 When an operator is pressed:
 	Change the current operator to the new one
 
+	If firstTerm is empty then return
+
 	If newEquation:
 		Move onto the next term
 	Else:

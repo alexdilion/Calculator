@@ -18,6 +18,7 @@ const clearButton = document.querySelector("#clear");
 const equalsButton = document.querySelector("#operate");
 const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
+const MAX_DECIMALS = 2;
 
 let firstTerm = "";
 let secondTerm = "";
@@ -40,6 +41,20 @@ function multiply(x, y) {
 
 function divide(x, y) {
     return x / y;
+}
+
+function roundNumber(num) {
+    if (num % 1 === 0) {
+        return num;
+    }
+
+    const decimalPlaces = num.toString().split(".")[1].length;
+
+    if (decimalPlaces < MAX_DECIMALS) {
+        return num;
+    } else {
+        return Number(num).toFixed(MAX_DECIMALS);
+    }
 }
 
 function updateDisplay() {
@@ -91,7 +106,16 @@ function onNumberPressed(number) {
 
 function onOperatorPressed(operator) {
     operator = operator.target.getAttribute("data-value");
+
+    if (currentOperator && firstTerm && secondTerm && !result) {
+        operate();
+    }
+
     currentOperator = operator;
+
+    if (firstTerm === "") {
+        return;
+    }
 
     if (newEquation) {
         onFirstTerm = false;
@@ -107,6 +131,7 @@ function onOperatorPressed(operator) {
 function operate() {
     let x, y;
 
+    // Do nothing if there are no terms
     if (firstTerm === "" && secondTerm === "") return;
 
     if (result === "") {
@@ -114,10 +139,12 @@ function operate() {
     } else {
         x = Number(result);
         firstTerm = result;
-        updateDisplay();
     }
 
     y = Number(secondTerm);
+
+    x = Number(roundNumber(x));
+    y = Number(roundNumber(y));
 
     if (y === 0 && currentOperator === "divide") {
         alert("Error! You tried to divide by 0!");
@@ -133,7 +160,7 @@ function operate() {
         return;
     }
 
-    result = OPERATIONS[currentOperator](x, y).toString();
+    result = roundNumber(OPERATIONS[currentOperator](x, y));
     newEquation = false;
     updateDisplay();
 }
