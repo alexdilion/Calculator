@@ -1,3 +1,6 @@
+const MAX_DECIMALS = 3;
+
+// Operations that can be done
 const OPERATIONS = {
     add,
     subtract,
@@ -5,6 +8,7 @@ const OPERATIONS = {
     divide,
 };
 
+// Signs for operators
 const OPERATOR_SIGNS = {
     add: "+",
     subtract: "-",
@@ -12,166 +16,176 @@ const OPERATOR_SIGNS = {
     divide: "÷",
 };
 
-const equationText = document.querySelector("#equation");
-const resultText = document.querySelector("#result");
-const clearButton = document.querySelector("#clear");
-const equalsButton = document.querySelector("#operate");
-const numberButtons = document.querySelectorAll(".number");
-const operatorButtons = document.querySelectorAll(".operator");
-const MAX_DECIMALS = 2;
+// Calculator elements
+const equationText = document.querySelector("#equation-text");
+const resultText = document.querySelector("#result-text");
+const calculatorButtons = document.querySelectorAll(".buttons button");
 
-let firstTerm = "";
-let secondTerm = "";
-let currentOperator = "";
-let result = "";
-let newEquation = true;
-let onFirstTerm = true;
+let equation = {
+    firstOperand: "0",
+    secondOperand: "",
+    operator: "",
+    operatorSign: "",
+    result: "",
+    currentOperand: "firstOperand",
+};
 
 function add(x, y) {
-    return x + y;
+    return roundNumber(x + y);
 }
 
 function subtract(x, y) {
-    return x - y;
+    return roundNumber(x - y);
 }
 
 function multiply(x, y) {
-    return x * y;
+    return roundNumber(x * y);
 }
 
 function divide(x, y) {
-    return x / y;
+    return roundNumber(x / y);
 }
 
-function roundNumber(num) {
-    if (num % 1 === 0) {
-        return num;
-    }
+function addDecimal() {
+    if (equation.result) clear();
 
-    const decimalPlaces = num.toString().split(".")[1].length;
+    if (equation[equation.currentOperand].indexOf(".") === -1) {
+        if (equation[equation.currentOperand] === "") {
+            equation[equation.currentOperand] = "0";
+        }
 
-    if (decimalPlaces < MAX_DECIMALS) {
-        return num;
-    } else {
-        return Number(num).toFixed(MAX_DECIMALS);
-    }
-}
-
-function updateDisplay() {
-    equationText.textContent = firstTerm;
-
-    if (currentOperator !== "") {
-        equationText.textContent += ` ${OPERATOR_SIGNS[currentOperator]}`;
-    }
-
-    if (secondTerm !== "") {
-        equationText.textContent += ` ${secondTerm}`;
-    }
-
-    if (result !== "") {
-        equationText.textContent += " =";
-        resultText.textContent = result;
-    }
-
-    if (result === "") {
-        resultText.textContent = "";
-    }
-}
-
-function clear() {
-    firstTerm = "";
-    secondTerm = "";
-    currentOperator = "";
-    result = "";
-    newEquation = true;
-    onFirstTerm = true;
-
-    resultText.textContent = "";
-    equationText.textContent = "";
-}
-
-function onNumberPressed(number) {
-    number = number.target.getAttribute("data-value");
-
-    if (result) clear();
-
-    if (onFirstTerm) {
-        firstTerm += number;
-    } else {
-        secondTerm += number;
+        equation[equation.currentOperand] += ".";
     }
 
     updateDisplay();
 }
 
-function onOperatorPressed(operator) {
-    operator = operator.target.getAttribute("data-value");
+// Round x down to MAX_DECIMALS places.
+function roundNumber(x) {
+    let decimalPlaces = 10 ** MAX_DECIMALS;
+    return Math.round(x * decimalPlaces) / decimalPlaces;
+}
 
-    if (currentOperator && firstTerm && secondTerm && !result) {
-        operate();
+function updateDisplay() {
+    if (equation.firstOperand && equation.operator && equation.secondOperand) {
+        equationText.textContent = `${equation.firstOperand} ${equation.operatorSign} ${equation.secondOperand}`;
+    } else if (equation.firstOperand && equation.operator) {
+        equationText.textContent = `${equation.firstOperand} ${equation.operatorSign} `;
+    } else {
+        equationText.textContent = `${equation.firstOperand}`;
     }
 
-    currentOperator = operator;
+    if (equation.result && equationText.textContent.slice(1, -1) !== "=") {
+        equationText.textContent += " =";
+    }
 
-    if (firstTerm === "") {
+    resultText.textContent = equation.result;
+}
+
+function numberPressed(e) {
+    let number = e.target.getAttribute("data-value");
+
+    if (equation.result) clear();
+
+    if (equation.firstOperand === "0" && equation.currentOperand === "firstOperand") {
+        if (number === "0") {
+            return;
+        }
+
+        equation.firstOperand = "";
+    }
+
+    equation[equation.currentOperand] += number;
+    updateDisplay();
+}
+
+function operatorPressed(e) {
+    let operation = e.target.getAttribute("data-value");
+
+    if (equation.result && equation.currentOperand === "firstOperand") {
+        clear();
         return;
     }
 
-    if (newEquation) {
-        onFirstTerm = false;
-    } else {
-        firstTerm = result;
-        secondTerm = "";
-        result = "";
+    if (!equation.operator) {
+        equation.currentOperand = "secondOperand";
+    } else if (equation.currentOperand === "secondOperand" && equation.operator && equation.secondOperand) {
+        operate();
+
+        if (!equation.result) return;
+
+        equation.firstOperand = equation.result;
+        equation.currentOperand = "secondOperand";
+        equation.result = "";
+        equation.secondOperand = "";
     }
+
+    equation.operator = OPERATIONS[operation];
+    equation.operatorSign = OPERATOR_SIGNS[operation];
+    updateDisplay();
+}
+
+function clear() {
+    equation = {
+        firstOperand: "0",
+        secondOperand: "",
+        operator: "",
+        operatorSign: "",
+        result: "",
+        currentOperand: "firstOperand",
+    };
 
     updateDisplay();
 }
 
 function operate() {
-    let x, y;
+    let x, y, result;
 
-    // Do nothing if there are no terms
-    if (firstTerm === "" && secondTerm === "") return;
+    if (equation.firstOperand && equation.operator && equation.secondOperand) {
+        x = Number(equation.firstOperand);
+        y = Number(equation.secondOperand);
 
-    if (result === "") {
-        x = Number(firstTerm);
-    } else {
-        x = Number(result);
-        firstTerm = result;
+        if (y === 0 && equation.operator === OPERATIONS.divide) {
+            alert("TO INFINITY AND BEYOND..!");
+            clear();
+            return;
+        }
+
+        result = equation.operator(x, y);
+        equation.result = result.toString();
+    } else if (equation.firstOperand && !equation.operator) {
+        equation.result = equation.firstOperand;
     }
-
-    y = Number(secondTerm);
-
-    x = Number(roundNumber(x));
-    y = Number(roundNumber(y));
-
-    if (y === 0 && currentOperator === "divide") {
-        alert("Error! You tried to divide by 0!");
-        secondTerm = "";
-        updateDisplay();
-        return;
-    }
-
-    if (currentOperator === "") {
-        result = firstTerm;
-        newEquation = false;
-        updateDisplay();
-        return;
-    }
-
-    result = roundNumber(OPERATIONS[currentOperator](x, y));
-    newEquation = false;
+    console.table(equation);
     updateDisplay();
 }
 
-numberButtons.forEach((btn) => {
-    btn.addEventListener("click", onNumberPressed);
-});
+updateDisplay();
 
-operatorButtons.forEach((btn) => {
-    btn.addEventListener("click", onOperatorPressed);
-});
+function buttonPressed(e) {
+    const button = e.target;
 
-equalsButton.addEventListener("click", operate);
-clearButton.addEventListener("click", clear);
+    if (button.classList.contains("number-button")) {
+        numberPressed(e);
+        return;
+    }
+
+    if (button.classList.contains("operator-button")) {
+        operatorPressed(e);
+        return;
+    }
+
+    switch (button.id) {
+        case "decimal-button":
+            addDecimal();
+            break;
+        case "clear-button":
+            clear();
+            break;
+        case "operate-button":
+            operate();
+            break;
+    }
+}
+
+calculatorButtons.forEach((btn) => btn.addEventListener("click", buttonPressed));
