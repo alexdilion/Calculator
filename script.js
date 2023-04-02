@@ -1,5 +1,7 @@
 // Max decimal places for a result
 const MAX_DECIMALS = 3;
+const NUMBERS = "1234567890";
+const SPECIAL_KEYS = "+-*/.="; // Keys for calculator operations and functions
 
 // Operations that can be done
 const OPERATIONS = {
@@ -117,15 +119,18 @@ function updateDisplay() {
 
 // Run when a number button is pressed
 // Appends inputted number to the relevant operand
-function numberPressed(e) {
-    let number = e.target.getAttribute("data-value");
-
+function numberPressed(number) {
     if (equation.result) clear();
 
     // Remove 0 at the start
-    if (equation.firstOperand === "0" && equation.currentOperand === "firstOperand" && number !== "0") {
+    if (equation.firstOperand === "0" && equation.currentOperand === "firstOperand") {
+        // Prevent user from entering multiple zeroes at the start
+        if (number === "0") {
+            return;
+        }
+
         equation.firstOperand = "";
-    } else return; // Prevent user from entering multiple zeroes at the start
+    }
 
     // Append the number to the current operand
     equation[equation.currentOperand] += number;
@@ -134,9 +139,7 @@ function numberPressed(e) {
 
 // Run when an operator button is pressed
 // Sets the current operator to the operator clicked
-function operatorPressed(e) {
-    let operation = e.target.getAttribute("data-value");
-
+function operatorPressed(operation) {
     if (equation.result && equation.currentOperand === "firstOperand") {
         equation.firstOperand = equation.result;
         equation.result = "";
@@ -201,34 +204,72 @@ function operate() {
 
 updateDisplay();
 
-// Handles calculator button clicks
-function calculatorButtonPressed(e) {
-    const button = e.target;
-
-    if (button.classList.contains("number-button")) {
-        numberPressed(e);
+// Handles calculator button presses
+function calculatorButtonPressed(value) {
+    if (NUMBERS.indexOf(value) !== -1) {
+        numberPressed(value);
         return;
     }
 
-    if (button.classList.contains("operator-button")) {
-        operatorPressed(e);
+    if (value in OPERATIONS) {
+        operatorPressed(value);
         return;
     }
 
-    switch (button.id) {
-        case "decimal-button":
+    switch (value) {
+        case "decimal":
             addDecimal();
             break;
-        case "clear-button":
+        case "clear":
             clear();
             break;
-        case "operate-button":
+        case "operate":
             operate();
             break;
-        case "delete-button":
+        case "delete":
             deleteCharacter();
             break;
     }
 }
 
-calculatorButtons.forEach((btn) => btn.addEventListener("click", calculatorButtonPressed));
+// Handles key presses
+function keyPressed(e) {
+    const key = e.key;
+
+    if (NUMBERS.indexOf(key) !== -1) {
+        calculatorButtonPressed(key);
+        return;
+    } else if (SPECIAL_KEYS.indexOf(key) === -1 && key !== "Enter") {
+        return;
+    }
+
+    switch (key) {
+        case "+":
+            calculatorButtonPressed("add");
+            break;
+        case "-":
+            calculatorButtonPressed("subtract");
+            break;
+        case "*":
+            calculatorButtonPressed("multiply");
+            break
+        case "/":
+            calculatorButtonPressed("divide")
+            break;
+        case "=":
+        case "Enter":
+            calculatorButtonPressed("operate")
+            break
+        case ".":
+            calculatorButtonPressed("decimal");
+            break;
+    }
+}
+
+calculatorButtons.forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+        calculatorButtonPressed(e.target.getAttribute("data-value"));
+    })
+);
+
+document.addEventListener("keypress", keyPressed)
