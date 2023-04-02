@@ -103,8 +103,8 @@ function operatorPressed(e) {
     let operation = e.target.getAttribute("data-value");
 
     if (equation.result && equation.currentOperand === "firstOperand") {
-        clear();
-        return;
+        equation.firstOperand = equation.result;
+        equation.result = "";
     }
 
     if (!equation.operator) {
