@@ -233,13 +233,20 @@ function calculatorButtonPressed(value) {
 }
 
 // Handles key presses
-function keyPressed(e) {
+function keyDown(e) {
     const key = e.key;
+    console.log(key);
 
     if (NUMBERS.indexOf(key) !== -1) {
         calculatorButtonPressed(key);
         return;
-    } else if (SPECIAL_KEYS.indexOf(key) === -1 && key !== "Enter") {
+    } else if (key === "Enter") {
+        calculatorButtonPressed("operate");
+    } else if (key === "Backspace") {
+        calculatorButtonPressed("delete");
+    } else if (key === "Delete") {
+        calculatorButtonPressed("clear")
+    } else if (SPECIAL_KEYS.indexOf(key) === -1) {
         return;
     }
 
@@ -252,14 +259,14 @@ function keyPressed(e) {
             break;
         case "*":
             calculatorButtonPressed("multiply");
-            break
+            break;
         case "/":
-            calculatorButtonPressed("divide")
+            e.preventDefault();
+            calculatorButtonPressed("divide");
             break;
         case "=":
-        case "Enter":
-            calculatorButtonPressed("operate")
-            break
+            calculatorButtonPressed("operate");
+            break;
         case ".":
             calculatorButtonPressed("decimal");
             break;
@@ -272,4 +279,4 @@ calculatorButtons.forEach((btn) =>
     })
 );
 
-document.addEventListener("keypress", keyPressed)
+document.addEventListener("keydown", keyDown);
