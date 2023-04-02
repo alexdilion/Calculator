@@ -66,6 +66,30 @@ function roundNumber(x) {
     return Math.round(x * decimalPlaces) / decimalPlaces;
 }
 
+function deleteCharacter() {
+    if (equation.secondOperand) {
+        equation.secondOperand = equation.secondOperand.slice(0, -1);
+    } else if (equation.operator) {
+        equation.operator = "";
+        equation.operatorSign = "";
+        equation.currentOperand = "firstOperand";
+    } else if (equation.firstOperand !== "0") {
+        equation.firstOperand = equation.firstOperand.slice(0, -1);
+
+        if (!equation.firstOperand) {
+            equation.firstOperand = "0";
+        }
+    } else {
+        equation.firstOperand = "0";
+    }
+
+    if (equation.result) {
+        equation.result = "";
+    }
+
+    updateDisplay();
+}
+
 function updateDisplay() {
     if (equation.firstOperand && equation.operator && equation.secondOperand) {
         equationText.textContent = `${equation.firstOperand} ${equation.operatorSign} ${equation.secondOperand}`;
@@ -156,13 +180,13 @@ function operate() {
     } else if (equation.firstOperand && !equation.operator) {
         equation.result = equation.firstOperand;
     }
-    console.table(equation);
+
     updateDisplay();
 }
 
 updateDisplay();
 
-function buttonPressed(e) {
+function calculatorButtonPressed(e) {
     const button = e.target;
 
     if (button.classList.contains("number-button")) {
@@ -185,7 +209,10 @@ function buttonPressed(e) {
         case "operate-button":
             operate();
             break;
+        case "delete-button":
+            deleteCharacter();
+            break;
     }
 }
 
-calculatorButtons.forEach((btn) => btn.addEventListener("click", buttonPressed));
+calculatorButtons.forEach((btn) => btn.addEventListener("click", calculatorButtonPressed));
