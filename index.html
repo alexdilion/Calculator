@@ -9,42 +9,35 @@
     </head>
 
     <body>
-        <header>
-            <h1>Calculator</h1>
-        </header>
         <div class="calculator-wrapper">
             <div class="display">
                 <div id="equation-text" class="display-text"></div>
                 <div id="result-text" class="display-text"></div>
             </div>
             <div class="buttons">
-                <!-- Digits -->
+                <button class="function-button" id="clear-button" data-value="clear">C</button>
+                <button class="function-button" id="operate-button" data-value="operate">=</button>
                 <button class="number-button" data-value="1">1</button>
                 <button class="number-button" data-value="2">2</button>
                 <button class="number-button" data-value="3">3</button>
+                <button class="operator-button" data-value="add">+</button>
                 <button class="number-button" data-value="4">4</button>
                 <button class="number-button" data-value="5">5</button>
                 <button class="number-button" data-value="6">6</button>
+                <button class="operator-button" data-value="subtract">-</button>
                 <button class="number-button" data-value="7">7</button>
                 <button class="number-button" data-value="8">8</button>
                 <button class="number-button" data-value="9">9</button>
-                <button class="number-button" data-value="0">0</button>
-
-                <!-- Operators -->
-                <button class="operator-button" data-value="add">+</button>
-                <button class="operator-button" data-value="subtract">-</button>
                 <button class="operator-button" data-value="multiply">×</button>
-                <button class="operator-button" data-value="divide">÷</button>
-                
-                <!-- Calculator functions -->
+                <button class="function-button" id="delete-button" data-value="delete">DEL</button>
+                <button class="number-button" data-value="0">0</button>
                 <button class="function-button" id="decimal-button" data-value="decimal">.</button>
-                <button class="function-button" id="clear-button" data-value="clear">clear</button>
-                <button class="function-button" id="operate-button" data-value="operate">=</button>
+                <button class="operator-button" data-value="divide">÷</button>
             </div>
         </div>
         <footer>
             <a href="https://github.com/alexdilion/calculator">
-                <img src="./images/github-mark.png" alt="GitHub logo" height="30px" />
+                <img src="./images/github-mark.png" alt="GitHub logo" height="45px" />
                 Alex Dilion &copy;
                 <script>
                     document.write(new Date().getFullYear());
